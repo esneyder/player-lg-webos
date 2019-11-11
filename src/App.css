@@ -1,0 +1,23 @@
+body {
+  width: 1280px;
+  height: 720px;
+  background-color: gray;
+}
+
+.App {
+  text-align: center;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: red;
+  width: 1280px;
+  height: 720px;
+}
+
+.videoo {
+  width:100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
