@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import logo from './logo.svg';
 import './App.css';
 import Axios from "axios";
+const qs = require('querystring')
 
 const APP_ID = 'com.clarovideo';
 const DRM_TYPE = 'playready';
@@ -13,13 +14,7 @@ class AppVideo extends Component {
   constructor(props) {
     super(props);
     this.sendVideo = this.sendVideo.bind(this);
-
-    this.drmUrl = '';
-    this.videoUrl = '';
-    this.challenge = '';
-    // this.device_id = '846b1383-a3ed-4757-ae22-e52ef7ea5ce2';
     this.webOS = window.webOS;
-
 
     this.unloadWebosDrmClient = this.unloadWebosDrmClient.bind(this);
     this.loadWebosDrmClient = this.loadWebosDrmClient.bind(this);
@@ -93,26 +88,60 @@ class AppVideo extends Component {
 
   sendVideo() {
 
-    const gtm = 'http://mfwktv2lg-api.clarovideo.net/services/player/getmedia?group_id=722390&stream_type=smooth_streaming&preview=0&HKS=l2rhbm8b752gsn5fujco4c8805&api_version=v5.88&authpn=amco&authpt=12e4i8l6a581a&device_category=tv&device_manufacturer=lg&device_model=web0s&device_type=TV&device_id=30da4a42-d086-e54b-60c0-1a398b333aa7&device_name=lg&device_so=webos&region=mexico&format=json&user_id=35944753';
-    Axios.get(gtm)
+    let gtm= '';
+
+    // AMCO
+    gtm = 'http://aws-east-microfwk-silo-web.clarovideo.net/services/player/getmedia?HKS=HKSRANDOM220196685&api_version=v5.88&region=mexico&device_manufacturer=windows&device_category=web&device_model=html5&device_type=html5&device_name=web_Chrome_1&device_id=PLYAUT220196685&authpt=11s4e5l6a381e&authpn=accedo&user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzM3NjIwMDEsImV4cCI6MTU3ODk0NjMwMSwidXNyIjp7InVzZXJfaWQiOiIzNTk3MzQ5MyIsInVzZXJfdHlwZSI6IkNNWEFNQ08iLCJ1c2VybmFtZSI6ImFtY29wcnVlYmFzLmF1dC5wbHkrdHJrYW1jb18yOUBnbWFpbC5jb20iLCJlbWFpbCI6ImFtY29wcnVlYmFzLmF1dC5wbHkrdHJrYW1jb18yOUBnbWFpbC5jb20iLCJmaXJzdG5hbWUiOiJhdXRvbWF0aW9uIiwibGFzdG5hbWUiOiJkbGEiLCJjb3VudHJ5X2NvZGUiOiJNWCIsInJlZ2lvbiI6Im1leGljbyIsImFjY2VwdGVkX3Rlcm1zIjoxLCJnYW1pZmljYXRpb25faWQiOiI1YzUzM2E1NmE4YjM4MzExN2UxZTliMTYiLCJwYXJlbnRfaWQiOiIzNTk3MzQ5MyIsImFjY291bnQiOm51bGwsImFkbWluIjp0cnVlfX0.V2ls2yWQGXZ1aAyKel8RHxGZY7RZ9ZCEgbvcfk5776Y&payway_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzM3NjE3MDIsImV4cCI6MTU3Mzg0ODEwMiwicGdzIjp7InVzZXJfaWQiOiIzNTk3MzQ5MyIsInBfdXNlcl9pZCI6IjM1OTczNDkzIiwib2ZmZXJpZCI6IjE0MzI3NTY1IiwicHVyY2hhc2VpZCI6IjQ1MjYyODk2NCIsImdyb3VwIjoiNTI5MDU0IiwicGxheSI6MSwiY19kaXNwX3AiOiI1In19.NrPFjFaOfzMGnM-lR7Iod5h-1r5j_J38nojHrygGUPA&stream_type=smooth_streaming&group_id=529054';
+
+    // NOW
+    //gtm = 'https://aws-sa-east-1-netf-web.clarovideo.net/services/player/getmedia?HKS=(nop8g4k7qwfdsy0f15w8mzwyv6)&api_version=v5.87&region=brasil&device_manufacturer=windows&device_category=web&device_model=html5&device_type=html5&device_name=web_Chrome_1&device_id=PLYAUT432659409&authpt=5facd9d23d05bb83&authpn=net&stream_type=smooth_streaming&group_id=793613&user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbWZ3a3dlYm54MS1hcGkuY2xhcm92aWRlby5uZXQiLCJleHAiOjE1NzkwMjYzMTgsIm5iZiI6MTU3Mzg0MjMxOCwiaWF0IjoxNTczODQyMzE4LCJqdGkiOiJCME4yT00wRU40M0YzM0poaFVIeXJwWCtOdkozN0VpRlgwcmhEK0NGblgwPSIsInVzciI6eyJ1c2VyX2lkIjoiNDAzMTc4ODMiLCJ1c2VyX3R5cGUiOiJDQVJOT1ZJUCIsInVzZXJuYW1lICI6InBsYXllcjMyMzQxNTVAbmV0ZmxleC5jb20iLCJlbWFpbCI6InBsYXllcnFhMDE5QGFtY28ubXgiLCJmaXJzdG5hbWUiOiJmaXJzdG5hbWUiLCJsYXN0bmFtZSI6Imxhc3RuYW1lIiwiY291bnRyeV9jb2RlIjoiQVIiLCJyZWdpb24iOiJhcmdlbnRpbmEiLCJhY2NlcHRlZF90ZXJtcyI6MSwiZ2FtaWZpY2F0aW9uX2lkIjoiNWRhZGZlNDE1Yzg5MDA1MDBjNTlmMmYwIiwicGFyZW50X2lkIjoiNDAzMTc4ODMiLCJhY2NvdW50IjpudWxsLCJhZG1pbiI6dHJ1ZX19.3UA3kNjc7QiT0mo5bUKB9UOcwH0RvCkw_8qCjgRHj7g&payway_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1ODM3NTU2ODAsImlhdCI6MTU3Mzg0MjM1OSwiaXNzIjoicGF5bWVudHNlcnZpY2UvbGl2ZWNoYW5uZWxzIiwiYXVkIjoicGxheWVyLXNlcnZpY2UiLCJzdWIiOiJwYWNrYWdlIiwicGdzIjp7InVzZXJJZCI6IjQwMzE3ODgzIiwib2ZmZXJJZCI6Ijg4NzY4ODc2IiwicHVyY2hhc2VJZCI6ImM3NmRmOTYxLWUzNzEtNDRlZC05ODNkLWYxMmUyYTcwM2QwMCIsInBsYXkiOjEsIm9iamVjdElkIjo0MDEyLCJtYXhTdHJlYW1zIjowLCJtYXhEZXZpY2VzIjo1LCJucHZyU3RvcmFnZSI6MzAsInRpbWVzaGlmdCI6NjAsImdyb3VwcyI6WyI3OTM1OTgiLCI3OTM2MTMiLCI3OTM1NDkiLCI3OTM2MTIiLCI3OTQ3MzUiLCI3OTQ3MTUiLCI3OTQ3NTQiLCI3OTQ3NzMiLCI3OTQ3NzIiLCI3OTQ3NzEiXX19.ks_-KMEzglqwTGkeH4bsMy9qZyEOexL5QwPmtSCvoCg';
+    
+    Axios.post(gtm)
       .then((res) => {
         if (res.status == 200) {
 
-          const videoData = res.data.response;
+          const data = res.data;
+          let server_url = data.response.media.server_url;
+          let video_url = data.response.media.video_url;
+          let jsonChallenge = JSON.parse(data.response.media.challenge);
+          let customData = {};
 
-          let server_url = videoData.media.server_url;
-          server_url = 'https://playready-claroglobal-vod-web.clarovideo.net/rightsmanager.asmx?user_id=10644078';
-          const video_url = 'http://mxuspss2qro.clarovideo.com/multimediav81/plataforma_vod/MP4/201810/MAH006682_full/MAH006682_full_SS_SS.ism/Manifest';
-          const challenge = videoData.media.challenge ? videoData.media.challenge : null;
-          let customData;
-          if (challenge) {
-            customData = btoa('{"customdata":{"token":"0a6a53260e1a4f2ee50be3d09af9dcc8","material_id":"878364"},"device_id":"1d5de6b04b18457c44b5ecb70f1d4a26"}');
+          switch (parseInt(data.response.group.common.extendedcommon.media.proveedor.id)) {
+            case 1: //AMCO
+              customData = {
+                "customdata": jsonChallenge,
+                "device_id": data.entry.device_id
+              }
+              break;
+            case 2: //FOXV2
+              break;
+            case 3: //FOXV3
+              break;
+            case 4: //HBO
+              break;
+            case 5: //NOGGIN
+              break;
+            case 6: //CRACKLE
+              break;
+            case 7: //PICARDIA
+              break;
+            case 8: //INDY
+              break;
+            case 9: //EDYE
+              break;
+            case 10: //NOW
+              customData = {
+                "privateData": jsonChallenge.token,
+                "deviceUniqueId": data.entry.device_id
+              }
+              break;
+            case 11: //PARAMOUNT
+              break;
           }
-
           this.web0sInitiatorMsg = this.getXMLInitiator(server_url, customData);
-          this.loadWebosDrmClient(video_url, server_url, challenge);
-          console.log('video_url, server_url, challenge, customData: ', video_url, server_url, challenge, customData);
-          //vid.play();
+          this.loadWebosDrmClient(video_url, server_url, customData);
+          console.log('video_url, server_url, customData: ', video_url, server_url, JSON.stringify(customData));
+          return res;
         }
       })
       .catch((err) => {
@@ -120,20 +149,19 @@ class AppVideo extends Component {
       });
   }
 
-  getXMLInitiator(drmUrl, customData) {
-    if (!customData) customData = '';
-    let xml_replace = '<?xml version="1.0" encoding="utf-8"?>';
-    xml_replace += '<PlayReadyInitiator xmlns="http://schemas.microsoft.com/DRM/2007/03/protocols/">';
-    xml_replace += '<LicenseServerUriOverride>';
-    xml_replace += '<LA_URL>{{drm_url}}</LA_URL>';
-    xml_replace += '</LicenseServerUriOverride>';
-    xml_replace += '<SetCustomData>';
-    xml_replace += '<CustomData>{{customData}}</CustomData>';
-    xml_replace += '</SetCustomData>';
-    xml_replace += '</PlayReadyInitiator>';
+  getXMLInitiator(server_url, customData) {
+    let xml_replace = '<?xml version="1.0" encoding="UTF-8"?>' +
+    '<PlayReadyInitiator xmlns="http://schemas.microsoft.com/DRM/2007/03/protocols/">' +
+        '<LicenseServerUriOverride>' +
+          '<LA_URL>{{server_url}}</LA_URL>' +
+        '</LicenseServerUriOverride>'+
+        '<SetCustomData>' +
+          '<CustomData>{{customData}}</CustomData>' +
+        '</SetCustomData>' +
+    '</PlayReadyInitiator>'
 
-    xml_replace = xml_replace.replace('{{drm_url}}', drmUrl);
-    xml_replace = xml_replace.replace('{{customData}}', customData);
+    xml_replace = xml_replace.replace('{{server_url}}', server_url);
+    xml_replace = xml_replace.replace('{{customData}}', btoa(JSON.stringify(customData)));
 
     console.log('DRM XML: ' + xml_replace);
 
@@ -141,7 +169,7 @@ class AppVideo extends Component {
   }
 
 
-  loadWebosDrmClient(video_url, server_url, challenge) {
+  loadWebosDrmClient(video_url, server_url, customData) {
     console.log('[WEB0S PLAYER] iniciando loadWebosDrmClient...');
 
     this.setInitiatorInformation().then((resp) => {
@@ -149,7 +177,7 @@ class AppVideo extends Component {
 
       this.web0sClientId = resp[0];
 
-      this.sendDRMInformation(server_url, challenge).then(
+      this.sendDRMInformation(server_url, customData).then(
         () => {
           this.web0sReady = true;
           this.setVideoSource(video_url, server_url, this.mediaType);
@@ -205,7 +233,7 @@ class AppVideo extends Component {
     });
   }
 
-  sendDRMInformation(server_url, challenge) {
+  sendDRMInformation(server_url, customData) {
     const _parameters = {
       "clientId": this.web0sClientId,
       "msgType": 'application/vnd.ms-playready.initiator+xml',
@@ -286,7 +314,7 @@ class AppVideo extends Component {
     let options = {};
     options.option = {};
     let mediaOption = '';
-
+ 
     if (server_url) {
       options.option.drm = {};
       options.option.drm.type = DRM_TYPE;
