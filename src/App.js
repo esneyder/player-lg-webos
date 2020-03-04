@@ -27,9 +27,6 @@ class AppVideo extends Component {
     this.web0sReady = false;
     this.mediaType = "application/vnd.ms-sstr+xml";
     this.web0sInitiatorMsg = '';
-    /**
-     application/vnd.ms-sstr+xml;mediaOption=%7B%22option%22%3A%7B%22drm%22%3A%7B%22type%22%3A%22playready%22%2C%22clientId%22%3A%22N5FWuG1Afg%22%7D%2C%22transmission%22%3A%7B%22playTime%22%3A%7B%22start%22%3A500%7D%7D%7D%7D
-     */
   }
 
   componentDidMount() {
@@ -182,11 +179,9 @@ class AppVideo extends Component {
         }
       ).catch((msg) => {
         console.log('[WEB0S PLAYER] error en las promesas en sendDRMInformation', msg);
-        //this._onError(onRenderError, 'Error when sending DRM information');
       });
     }).catch((msg) => {
       console.log('[WEB0S PLAYER] error en las promesas en loadWebosDrmClient', msg);
-      //this._onError(onRenderError, 'Error when set DRM initiator information');
     });
   }
 
@@ -224,7 +219,6 @@ class AppVideo extends Component {
         onFailure: (result) => {
           console.log("[WEB0S PLAYER] loadDrmClient [" + result.errorCode + "] " + result.errorText);
           var err = result.errorCode + "<>" + result.errorText;
-          // Do something for error handling
           reject(err);
         }
       });
@@ -326,14 +320,7 @@ class AppVideo extends Component {
     options.option.transmission.playTime.start = 500;
 
     mediaOption = escape(JSON.stringify(options));
-    //source.setAttribute('type', 'application/vnd.ms-sstr+xml;mediaOption=' + mediaOption);
     source.setAttribute('type', type + ';mediaOption=' + mediaOption);
-
-    // console.log("[WEB0S] HTML5 player __addSourceToVideoPlayready: " + mediaOption);
-    // console.log("[WEB0S] HTML5 player __addSourceToVideoPlayready: " + this.WEBOSClientId);
-    // console.log("[WEB0S] HTML5 player __addSourceToVideoPlayready: " + this.WEBOSReady);
-    // console.log("[WEB0S] HTML5 player __addSourceToVideoPlayready: " + type);
-    // console.log("[WEB0S] HTML5 player startTime play: " + this._playTimeStart);
 
     source.setAttribute('src', video_url);
     source.id = "Html5PlayerSource_full";
@@ -356,9 +343,6 @@ class AppVideo extends Component {
   }
 
   render() {
-
-    const v1 = 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Big_Buck_Bunny_4K.webm';
-    const v3 = 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8';
 
     return (
       <div className="App">
