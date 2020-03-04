@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import logo from './logo.svg';
 import './App.css';
 import Axios from "axios";
-const qs = require('querystring')
 
 const APP_ID = 'com.clarovideo';
 const DRM_TYPE = 'playready';
@@ -91,18 +89,18 @@ class AppVideo extends Component {
     let gtm= '';
 
     // AMCO
-    gtm = 'http://aws-east-microfwk-silo-web.clarovideo.net/services/player/getmedia?HKS=HKSRANDOM220196685&api_version=v5.88&region=mexico&device_manufacturer=windows&device_category=web&device_model=html5&device_type=html5&device_name=web_Chrome_1&device_id=PLYAUT220196685&authpt=11s4e5l6a381e&authpn=accedo&user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzM3NjIwMDEsImV4cCI6MTU3ODk0NjMwMSwidXNyIjp7InVzZXJfaWQiOiIzNTk3MzQ5MyIsInVzZXJfdHlwZSI6IkNNWEFNQ08iLCJ1c2VybmFtZSI6ImFtY29wcnVlYmFzLmF1dC5wbHkrdHJrYW1jb18yOUBnbWFpbC5jb20iLCJlbWFpbCI6ImFtY29wcnVlYmFzLmF1dC5wbHkrdHJrYW1jb18yOUBnbWFpbC5jb20iLCJmaXJzdG5hbWUiOiJhdXRvbWF0aW9uIiwibGFzdG5hbWUiOiJkbGEiLCJjb3VudHJ5X2NvZGUiOiJNWCIsInJlZ2lvbiI6Im1leGljbyIsImFjY2VwdGVkX3Rlcm1zIjoxLCJnYW1pZmljYXRpb25faWQiOiI1YzUzM2E1NmE4YjM4MzExN2UxZTliMTYiLCJwYXJlbnRfaWQiOiIzNTk3MzQ5MyIsImFjY291bnQiOm51bGwsImFkbWluIjp0cnVlfX0.V2ls2yWQGXZ1aAyKel8RHxGZY7RZ9ZCEgbvcfk5776Y&payway_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzM3NjE3MDIsImV4cCI6MTU3Mzg0ODEwMiwicGdzIjp7InVzZXJfaWQiOiIzNTk3MzQ5MyIsInBfdXNlcl9pZCI6IjM1OTczNDkzIiwib2ZmZXJpZCI6IjE0MzI3NTY1IiwicHVyY2hhc2VpZCI6IjQ1MjYyODk2NCIsImdyb3VwIjoiNTI5MDU0IiwicGxheSI6MSwiY19kaXNwX3AiOiI1In19.NrPFjFaOfzMGnM-lR7Iod5h-1r5j_J38nojHrygGUPA&stream_type=smooth_streaming&group_id=529054';
+    //gtm = 'http://aws-east-microfwk-silo-web.clarovideo.net/services/player/getmedia?HKS=HKSRANDOM220196685&api_version=v5.88&region=mexico&device_manufacturer=windows&device_category=web&device_model=html5&device_type=html5&device_name=web_Chrome_1&device_id=PLYAUT220196685&authpt=11s4e5l6a381e&authpn=accedo&user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzM3NjIwMDEsImV4cCI6MTU3ODk0NjMwMSwidXNyIjp7InVzZXJfaWQiOiIzNTk3MzQ5MyIsInVzZXJfdHlwZSI6IkNNWEFNQ08iLCJ1c2VybmFtZSI6ImFtY29wcnVlYmFzLmF1dC5wbHkrdHJrYW1jb18yOUBnbWFpbC5jb20iLCJlbWFpbCI6ImFtY29wcnVlYmFzLmF1dC5wbHkrdHJrYW1jb18yOUBnbWFpbC5jb20iLCJmaXJzdG5hbWUiOiJhdXRvbWF0aW9uIiwibGFzdG5hbWUiOiJkbGEiLCJjb3VudHJ5X2NvZGUiOiJNWCIsInJlZ2lvbiI6Im1leGljbyIsImFjY2VwdGVkX3Rlcm1zIjoxLCJnYW1pZmljYXRpb25faWQiOiI1YzUzM2E1NmE4YjM4MzExN2UxZTliMTYiLCJwYXJlbnRfaWQiOiIzNTk3MzQ5MyIsImFjY291bnQiOm51bGwsImFkbWluIjp0cnVlfX0.V2ls2yWQGXZ1aAyKel8RHxGZY7RZ9ZCEgbvcfk5776Y&payway_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzM3NjE3MDIsImV4cCI6MTU3Mzg0ODEwMiwicGdzIjp7InVzZXJfaWQiOiIzNTk3MzQ5MyIsInBfdXNlcl9pZCI6IjM1OTczNDkzIiwib2ZmZXJpZCI6IjE0MzI3NTY1IiwicHVyY2hhc2VpZCI6IjQ1MjYyODk2NCIsImdyb3VwIjoiNTI5MDU0IiwicGxheSI6MSwiY19kaXNwX3AiOiI1In19.NrPFjFaOfzMGnM-lR7Iod5h-1r5j_J38nojHrygGUPA&stream_type=smooth_streaming&group_id=529054';
 
     // NOW
-    //gtm = 'https://aws-sa-east-1-netf-web.clarovideo.net/services/player/getmedia?HKS=(nop8g4k7qwfdsy0f15w8mzwyv6)&api_version=v5.87&region=brasil&device_manufacturer=windows&device_category=web&device_model=html5&device_type=html5&device_name=web_Chrome_1&device_id=PLYAUT432659409&authpt=5facd9d23d05bb83&authpn=net&stream_type=smooth_streaming&group_id=793613&user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbWZ3a3dlYm54MS1hcGkuY2xhcm92aWRlby5uZXQiLCJleHAiOjE1NzkwMjYzMTgsIm5iZiI6MTU3Mzg0MjMxOCwiaWF0IjoxNTczODQyMzE4LCJqdGkiOiJCME4yT00wRU40M0YzM0poaFVIeXJwWCtOdkozN0VpRlgwcmhEK0NGblgwPSIsInVzciI6eyJ1c2VyX2lkIjoiNDAzMTc4ODMiLCJ1c2VyX3R5cGUiOiJDQVJOT1ZJUCIsInVzZXJuYW1lICI6InBsYXllcjMyMzQxNTVAbmV0ZmxleC5jb20iLCJlbWFpbCI6InBsYXllcnFhMDE5QGFtY28ubXgiLCJmaXJzdG5hbWUiOiJmaXJzdG5hbWUiLCJsYXN0bmFtZSI6Imxhc3RuYW1lIiwiY291bnRyeV9jb2RlIjoiQVIiLCJyZWdpb24iOiJhcmdlbnRpbmEiLCJhY2NlcHRlZF90ZXJtcyI6MSwiZ2FtaWZpY2F0aW9uX2lkIjoiNWRhZGZlNDE1Yzg5MDA1MDBjNTlmMmYwIiwicGFyZW50X2lkIjoiNDAzMTc4ODMiLCJhY2NvdW50IjpudWxsLCJhZG1pbiI6dHJ1ZX19.3UA3kNjc7QiT0mo5bUKB9UOcwH0RvCkw_8qCjgRHj7g&payway_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1ODM3NTU2ODAsImlhdCI6MTU3Mzg0MjM1OSwiaXNzIjoicGF5bWVudHNlcnZpY2UvbGl2ZWNoYW5uZWxzIiwiYXVkIjoicGxheWVyLXNlcnZpY2UiLCJzdWIiOiJwYWNrYWdlIiwicGdzIjp7InVzZXJJZCI6IjQwMzE3ODgzIiwib2ZmZXJJZCI6Ijg4NzY4ODc2IiwicHVyY2hhc2VJZCI6ImM3NmRmOTYxLWUzNzEtNDRlZC05ODNkLWYxMmUyYTcwM2QwMCIsInBsYXkiOjEsIm9iamVjdElkIjo0MDEyLCJtYXhTdHJlYW1zIjowLCJtYXhEZXZpY2VzIjo1LCJucHZyU3RvcmFnZSI6MzAsInRpbWVzaGlmdCI6NjAsImdyb3VwcyI6WyI3OTM1OTgiLCI3OTM2MTMiLCI3OTM1NDkiLCI3OTM2MTIiLCI3OTQ3MzUiLCI3OTQ3MTUiLCI3OTQ3NTQiLCI3OTQ3NzMiLCI3OTQ3NzIiLCI3OTQ3NzEiXX19.ks_-KMEzglqwTGkeH4bsMy9qZyEOexL5QwPmtSCvoCg';
+    gtm = 'https://aws-sa-east-1-netf-web.clarovideo.net/services/player/getmedia?HKS=(nop8g4k7qwfdsy0f15w8mzwyv6)&api_version=v5.87&region=brasil&device_manufacturer=windows&device_category=web&device_model=html5&device_type=html5&device_name=web_Chrome_1&device_id=PLYAUT432659409&authpt=5facd9d23d05bb83&authpn=net&stream_type=smooth_streaming&group_id=793613&user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbWZ3a3dlYm54MS1hcGkuY2xhcm92aWRlby5uZXQiLCJleHAiOjE1NzkwMjYzMTgsIm5iZiI6MTU3Mzg0MjMxOCwiaWF0IjoxNTczODQyMzE4LCJqdGkiOiJCME4yT00wRU40M0YzM0poaFVIeXJwWCtOdkozN0VpRlgwcmhEK0NGblgwPSIsInVzciI6eyJ1c2VyX2lkIjoiNDAzMTc4ODMiLCJ1c2VyX3R5cGUiOiJDQVJOT1ZJUCIsInVzZXJuYW1lICI6InBsYXllcjMyMzQxNTVAbmV0ZmxleC5jb20iLCJlbWFpbCI6InBsYXllcnFhMDE5QGFtY28ubXgiLCJmaXJzdG5hbWUiOiJmaXJzdG5hbWUiLCJsYXN0bmFtZSI6Imxhc3RuYW1lIiwiY291bnRyeV9jb2RlIjoiQVIiLCJyZWdpb24iOiJhcmdlbnRpbmEiLCJhY2NlcHRlZF90ZXJtcyI6MSwiZ2FtaWZpY2F0aW9uX2lkIjoiNWRhZGZlNDE1Yzg5MDA1MDBjNTlmMmYwIiwicGFyZW50X2lkIjoiNDAzMTc4ODMiLCJhY2NvdW50IjpudWxsLCJhZG1pbiI6dHJ1ZX19.3UA3kNjc7QiT0mo5bUKB9UOcwH0RvCkw_8qCjgRHj7g&payway_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1ODM3NTU2ODAsImlhdCI6MTU3Mzg0MjM1OSwiaXNzIjoicGF5bWVudHNlcnZpY2UvbGl2ZWNoYW5uZWxzIiwiYXVkIjoicGxheWVyLXNlcnZpY2UiLCJzdWIiOiJwYWNrYWdlIiwicGdzIjp7InVzZXJJZCI6IjQwMzE3ODgzIiwib2ZmZXJJZCI6Ijg4NzY4ODc2IiwicHVyY2hhc2VJZCI6ImM3NmRmOTYxLWUzNzEtNDRlZC05ODNkLWYxMmUyYTcwM2QwMCIsInBsYXkiOjEsIm9iamVjdElkIjo0MDEyLCJtYXhTdHJlYW1zIjowLCJtYXhEZXZpY2VzIjo1LCJucHZyU3RvcmFnZSI6MzAsInRpbWVzaGlmdCI6NjAsImdyb3VwcyI6WyI3OTM1OTgiLCI3OTM2MTMiLCI3OTM1NDkiLCI3OTM2MTIiLCI3OTQ3MzUiLCI3OTQ3MTUiLCI3OTQ3NTQiLCI3OTQ3NzMiLCI3OTQ3NzIiLCI3OTQ3NzEiXX19.ks_-KMEzglqwTGkeH4bsMy9qZyEOexL5QwPmtSCvoCg';
     
     Axios.post(gtm)
       .then((res) => {
         if (res.status == 200) {
 
           const data = res.data;
-          let server_url = data.response.media.server_url;
-          let video_url = data.response.media.video_url;
+          let server_url = 'https://proxy.claro03.uat.verspective.net/amco-test/playready?privatedata=6a838e2de8aa37c00acf7ddff6c73140&deviceuniqueid=PLYAUT422759848';
+          let video_url = 'http://offnetvod.cds.nowonline.com.br/Content/ssp/VOD/movie/22/af/2f74ec4d-070f-4b6d-8d50-b580d4d722af.ism/Manifest'
           let jsonChallenge = JSON.parse(data.response.media.challenge);
           let customData = {};
 
@@ -156,7 +154,7 @@ class AppVideo extends Component {
           '<LA_URL>{{server_url}}</LA_URL>' +
         '</LicenseServerUriOverride>'+
         '<SetCustomData>' +
-          '<CustomData>{{customData}}</CustomData>' +
+          '<CustomData></CustomData>' +
         '</SetCustomData>' +
     '</PlayReadyInitiator>'
 
